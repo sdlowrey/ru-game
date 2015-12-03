@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+"""Shell command to start ru-game"""
+
+import client
+
+client.GameShell().cmdloop()
