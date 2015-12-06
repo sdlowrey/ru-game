@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# install the ru-game components on a new EC2 instance
+
+if ! ec2-version > /dev/null 2>&1; then
+    echo "EC2 tools not installed?"
+    exit 1
+else
+    echo "Using EC2 tools version $(ec2-version)"
+fi
+
+# create and activate a virtual environment
+mkdir venv && virtualenv-2.7 venv
+source venv/bin/activate
+
+# install Python dependencies
+pip install --upgrade pip
+pip install boto3
+
+echo '*** skipping multi-node setup'
+source cfg/ec2.cfg
+
+echo "launching $INST_COUNT $INST_TYPE instances"
+RUN_INST="ec2-run-instances $AMI -t $INST_TYPE -n $INST_COUNT -k $KEY -g $SG -s $SUBNET"
+instances=$($RUN_INST | awk '/INSTANCE/ {print $2}')
+[[ $? == 0 ]] || {
+    echo "Failed to launch instances."
+    exit 1
+}
+
+##########################
+exit
+
+echo "waiting for $INST_COUNT instance(s) to reach 'running' state"
+# create a map of instance states
+declare -A state
+for i in $instances; do state[$i]=null; done
+
+running=0
+while (( running < $INST_COUNT )); do
+    for inst in $instances; do
+	[[ ${state[$inst]} == "running" ]] && continue
+	state[$inst]=$(ec2-describe-instance-status $inst | awk '/^INSTANCE/ {print $4}')
+	[[ ${state[$inst]} == "running" ]] && (( running++ ))
+    done
+    echo "$running of $INST_COUNT instances running"
+    sleep 2
+done
+
+echo "tagging instances"
+for inst in $instances; do
+    ec2-create-tags $inst --tag Name=$INST_NAME > /dev/null
+done
+
+echo "complete"
