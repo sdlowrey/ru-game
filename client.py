@@ -41,10 +41,14 @@ Enter "help" or "?" for command info."""
 
     def do_ask(self, arg):
         """Ask a question. You will be prompted to answer the question. Punctuation not required."""
+        if not self._got_game():
+            return
         self._game.ask(raw_input('Question: '))
 
     def do_guess(self, arg):
         """Guess the answer. You will be prompted to answer the question. You only get one guess!"""
+        if not self._got_game():
+            return
         self._game.guess(raw_input('Guess: '))
 
     def do_quit(self, arg):
@@ -55,3 +59,9 @@ Enter "help" or "?" for command info."""
     def do_version(self, arg):
         """Print the game client version."""
         print(self._game.version)
+
+    def _got_game(self):
+        if self._game.state == game.ON:
+            return True
+        print('No game in progress.  Enter "start" to start a new game.')
+        return False
