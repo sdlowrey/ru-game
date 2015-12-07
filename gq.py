@@ -27,7 +27,7 @@ class SqsQueue(object):
     def get(self):
         """Get a single message from the queue.
 
-        Long polling is used.  If no messages are received within 20 seconds, return None.
+        Long polling is used.  If no messages are not received within 20 seconds, return None.
         """
         msg = self._q.receive_messages(MaxNumberOfMessages=1, MessageAttributeNames=['All'], WaitTimeSeconds=POLL_WAIT)
         if not self._isvalid(msg):

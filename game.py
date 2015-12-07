@@ -57,7 +57,7 @@ class ClientGame(object):
 
     def quit(self):
         """End the game if one is in progress."""
-        if not self._state == OVER:
+        if not self._state in [OVER, INITIALIZED]:
             self._out.put(self._message(message.MSG_QUIT))
             self._getresponse()
         self._state = OVER
