@@ -1,5 +1,6 @@
 """Classes and definitions for managing games from the client and server perspectives."""
 
+import db
 import gq
 import message
 import random
@@ -9,9 +10,6 @@ VERSION = '0.1'
 INITIALIZED = 0
 ON = 1
 OVER = 2
-
-solutions = ['soap', 'toaster', 'refrigerator', 'flour', 'fork', 'sink', 'pot', 'oven', 'foil', ]
-
 
 class ClientGame(object):
     """The client's game perspective.  Multiple games may be played during the life of the instance.
@@ -108,7 +106,7 @@ class ServerGame(object):
         self._result = None
         self._clientq = msg.body
         self._out = gq.SqsQueue(self._clientq)
-        self._solution = solutions[random.randint(0, len(solutions)-1)]
+        self._solution = db.all_solutions[random.randint(0, len(db.all_solutions))]
         self._state = INITIALIZED
         self._handler = {
             message.MSG_ASK: self._ask,
@@ -152,12 +150,18 @@ class ServerGame(object):
         self._out.put(self._message(message.MSG_QUIT, 'Game over'))
 
     def _eval_question(self, question):
-        """Parse the question, derive a predicate, apply it to the solution, return the result."""
-        return True  # TODO not implemented
+        """Scan the question for a word matching any property.  If found, return true else false."""
+        # TODO contrived; needs tokenization, grammatical parse
+        for i in range(0, len(db.all_properties)-1):
+            if question.find(db.all_properties[i]) >= 0:
+                if i in db.solutions[self._solution]: return True
+        return False
 
     def _eval_guess(self, guess):
         """Parse the guess.  If more than one word, extract the noun.  Compare and return the result."""
-        return True  # TODO not implemented
+        if guess.find(self._solution) >= 0:
+            return True
+        return False
 
     def _message(self, mtype, body='null'):
         """Create a GameMessage."""
