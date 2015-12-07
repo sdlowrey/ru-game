@@ -16,17 +16,18 @@ SWIM = 11
 CATCH = 13
 RACKET = 14
 KICK = 15
+BAT = 16
 
 # same order as above
 # TODO Enum might work better?
 all_properties = ['ball', 'swing', 'shoot', 'table', 'run', 'fight', 'throw', 'team', 'skate', 'ride', 'jump', 'swim',
-                  'catch', 'racket', 'kick']
+                  'catch', 'racket', 'kick', 'bat']
 
 solutions = {
     'tennis':        [BALL, SWING, RACKET, RUN],
     'badminton':     [SWING, RACKET, RUN],
     'basketball':    [BALL, RUN, JUMP, CATCH],
-    'baseball':      [BALL, SWING, RUN, CATCH],
+    'baseball':      [BALL, SWING, RUN, CATCH, BAT],
     'soccer' :       [BALL, KICK, RUN],
     'hockey':        [SKATE, SHOOT],
     'speed skating': [SKATE],
@@ -38,7 +39,7 @@ solutions = {
     'diving':        [JUMP, SWIM],
     'swimming':      [SWIM],
     'polo':          [BALL, RIDE, SWING],
-    'cricket':       [BALL, SWING, RUN, CATCH],
+    'cricket':       [BALL, SWING, RUN, CATCH, BAT],
     'shooting':      [SHOOT],
     'triathlon':     [RUN, RIDE, SWIM],
 }
