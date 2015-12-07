@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+"""Start an ru-game client or server component."""
+
+import argparse
+import client
+import server
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-s', '--server', action='store_true', help='run the server component')
+args = parser.parse_args()
+
+if args.server:
+    serv = server.Server().loop()
+else:
+    client.GameShell().cmdloop()

@@ -2,7 +2,6 @@ import gq
 import message
 import unittest
 
-
 class SQSMessageTest(unittest.TestCase):
     """Test queue creation and raw message put/get delete.
 
