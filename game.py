@@ -53,6 +53,11 @@ class ClientGame(object):
         self._getresponse()
         self._state = OVER
 
+    def get_props(self):
+        """Return a list of properties that can be queried."""
+        # TODO this should obtained via server request
+        return ', '.join(db.all_properties)
+
     def quit(self):
         """End the game if one is in progress."""
         if not self._state in [OVER, INITIALIZED]:

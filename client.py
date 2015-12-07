@@ -6,7 +6,22 @@ import game
 class GameShell(cmd.Cmd):
     """Command line game UI"""
 
-    intro = 'Welcome to ru-game!  Enter "help" or "?" for commands.'
+    intro = """Welcome to ru-game!
+
+Enter "start" to start a new game.  The server will pick an answer from a list of Olympic sports.
+Your job is to ask questions about the kinds of actions players take or things that are used in
+the game.
+
+Enter "things" to see a list of things you can ask about.
+
+When you think you have the answer, just say "guess".  You only get one chance!
+
+You can start a new game after each guess.
+
+Use arrow keys to recall previous commands.  Pressing Enter executes the last command.
+
+Enter "help" or "?" for command info."""
+
     prompt = '[ru-game] '
 
     def preloop(self):
@@ -19,6 +34,10 @@ class GameShell(cmd.Cmd):
             print('Game {} is already in progress.'.format(self._game.id))
             return
         self._game.start()
+
+    def do_things(self, arg):
+        """List the things that you should ask about."""
+        print(self._game.get_props())
 
     def do_ask(self, arg):
         """Ask a question. You will be prompted to answer the question. Punctuation not required."""
@@ -36,4 +55,3 @@ class GameShell(cmd.Cmd):
     def do_version(self, arg):
         """Print the game client version."""
         print(self._game.version)
-
