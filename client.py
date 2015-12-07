@@ -14,23 +14,22 @@ class GameShell(cmd.Cmd):
         self._game = game.ClientGame()
 
     def do_start(self, arg):
-        """Start a new game.
-
-        If a game is already in progress, then no need to send a message.
-        """
+        """Start a new game."""
         if self._game.state == game.ON:
             print('Game {} is already in progress.'.format(self._game.id))
             return
         self._game.start()
 
     def do_ask(self, arg):
+        """Ask a question. You will be prompted to answer the question. Punctuation not required."""
         self._game.ask(raw_input('Question: '))
 
     def do_guess(self, arg):
+        """Guess the answer. You will be prompted to answer the question. You only get one guess!"""
         self._game.guess(raw_input('Guess: '))
 
     def do_quit(self, arg):
-        """Quit the game. If the game isn't over, end it with the server.  Exit the UI."""
+        """Quit the game and exit. If the game isn't over, the server will be notified."""
         self._game.quit()
         return True
 
